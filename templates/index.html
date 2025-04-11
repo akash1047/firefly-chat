@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        @keyframes flicker {
+            0% { opacity: 1; text-shadow: 0 0 10px #ff6600, 0 0 20px #ff3300, 0 0 30px #ff0000; }
+            50% { opacity: 0.8; text-shadow: 0 0 15px #ff3300, 0 0 25px #ff0000, 0 0 35px #cc0000; }
+            100% { opacity: 1; text-shadow: 0 0 10px #ff6600, 0 0 20px #ff3300, 0 0 30px #ff0000; }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: black;
+            color: white;
+        }
+
+        .chat-container {
+            width: 50%;
+            margin: auto;
+            background: rgba(20, 20, 20, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 100, 0, 0.8);
+        }
+
+        .chat-box {
+            height: 300px;
+            overflow-y: scroll;
+            border: 2px solid #ff6600;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(10, 10, 10, 0.9);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #ff6600;
+            background: black;
+            color: white;
+            font-size: 16px;
+            text-shadow: 0 0 5px #ff6600;
+        }
+
+        button {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: linear-gradient(45deg, #ff6600, #ff3300);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-shadow: 0 0 5px yellow;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #ff3300, #ff0000);
+            box-shadow: 0 0 10px rgba(255, 100, 0, 0.9);
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #ff6600;
+            text-shadow: 0 0 15px #ff3300, 0 0 25px #ff0000;
+            animation: flicker 1.5s infinite alternate;
+        }
+
+        @keyframes fireBg {
+            0% { background-position: 0 0; }
+            50% { background-position: 10px 20px; }
+            100% { background-position: 0 0; }
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/fire.png');
+            background-size: cover;
+            opacity: 0.3;
+            z-index: -1;
+            animation: fireBg 5s infinite linear;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <h1>🔥 FireFly Chatbot 🔥</h1>
+        <div class="chat-box" id="chat-box">
+            <p><b style="color:#ff6600;">FireFly:</b> Hello! How can I assist you?</p>
+        </div>
+        <input type="text" id="user-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            let userText = document.getElementById("user-input").value;
+            if (userText === "") return;
+
+            let chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<p><b>You:</b> ${userText}</p>`;
+
+            fetch(`/get?msg=${userText}`)
+                .then(response => response.json())
+                .then(data => {
+                    chatBox.innerHTML += `<p><b style="color:#ff6600;">FireFly:</b> ${data.response}</p>`;
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                });
+
+            document.getElementById("user-input").value = "";
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    </script>
+
+</body>
+</html>
