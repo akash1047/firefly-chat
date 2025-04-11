@@ -1,3 +1,5 @@
+import os
+
 import tensorflow as tf
 import numpy as np
 import json
@@ -50,4 +52,6 @@ def chatbot_response():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.getenv("PORT") or "5000")
+
+    app.run(host="0.0.0.0", port=port, debug=True)

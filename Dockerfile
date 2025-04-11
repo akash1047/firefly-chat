@@ -28,6 +28,7 @@ RUN pip install tensorflow numpy pandas flask nltk scikit-learn
 
 # Expose the Flask port
 EXPOSE 5000
+ENV PORT=5000
 
 # Run the application
 CMD ["python", "chatbot.py"]
